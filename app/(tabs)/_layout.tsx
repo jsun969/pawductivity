@@ -1,13 +1,24 @@
 import { Link, Tabs } from 'expo-router';
+import { Image, Text, View } from 'react-native';
 
 import { NewTodoButton } from '../../components/NewTodoButton';
 import { TabBarIcon } from '../../components/TabBarIcon';
 
+import { useCoinsStore } from '~/store/coin';
+
 export default function TabLayout() {
+  const { coins } = useCoinsStore();
+
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: 'black',
+        headerLeft: () => (
+          <View className="ml-4 flex flex-row items-center gap-2">
+            <Image source={require('../../assets/images/coin.png')} className="size-6" />
+            <Text className="text-lg font-bold">{coins}</Text>
+          </View>
+        ),
       }}>
       <Tabs.Screen
         name="todo"
