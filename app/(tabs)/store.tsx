@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
+import { useCoinsStore } from '~/store/coin';
+import { useEquippedStore } from '~/store/equipped';
+import { Button } from '~/components/Button';
 
 const STORE = [
   {
@@ -124,7 +127,7 @@ export default function ExpandableList() {
   const [equippedFurniture, setEquippedFurniture] = useState('');
   const [equippedBackground, setEquippedBackground] = useState('');
   const [equippedBreed, setEquippedBreed] = useState('');
-  const [coins, setCoins] = useState(0);
+  const { coins, setCoins } = useCoinsStore();
 
   // Load images at the top level
   const images: { [key: string]: ReturnType<typeof useImage> } = {};
@@ -137,15 +140,8 @@ export default function ExpandableList() {
 
   // Handle item purchase
   const handleBuyItem = (id: string, cost: number) => {
-    setBoughtItems((s) => {
-      const newSet = new Set(s);
-      newSet.add(id);
-      return newSet;
-    });
-    // do this when there is storage, but for now just allow them to buy anything
-    /*
     if (coins >= cost) {
-      setCoins(coins - cost);
+      setCoins((prev) => prev - cost);
       setBoughtItems((s) => {
         const newSet = new Set(s);
         newSet.add(id);
@@ -154,7 +150,6 @@ export default function ExpandableList() {
     } else {
       // tell them not enough coins
     }
-      */
   };
 
   // Handle item equip
@@ -192,6 +187,9 @@ export default function ExpandableList() {
         </Canvas>
         <Text className="text-4xl font-bold">{coins}</Text>
       </View>
+      <Button title="add 100 coins" onPress={() => setCoins((prev) => prev + 100)}>
+        more coins
+      </Button>
       {STORE.map(({ category, items }, index) => {
         const isCategoryOpen = openedCategories.has(category);
         return (
