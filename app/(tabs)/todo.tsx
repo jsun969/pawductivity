@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack } from 'expo-router';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { TodoDifficulty } from '~/constants';
 import { useTodoStore } from '~/store/todo';
@@ -32,61 +32,65 @@ export default function TodoPage() {
           title: 'Todo List',
         }}
       />
-      <View className="flex flex-1 flex-col gap-4 p-6">
-        {sortedTodos.map(([id, todo]) => (
-          <View
-            key={id}
-            className="flex-row items-center justify-between rounded-lg bg-white p-4 shadow">
-            <View className="flex-1 pr-4">
-              <Text className="text-xl font-medium">{todo.name}</Text>
+      <ScrollView>
+        <View className="flex flex-1 flex-col gap-4 p-6">
+          {sortedTodos.map(([id, todo]) => (
+            <View
+              key={id}
+              className="flex-row items-center justify-between rounded-lg bg-white p-4 shadow">
+              <View className="flex-1 pr-4">
+                <Text className="text-xl font-medium">{todo.name}</Text>
 
-              <View className="mt-2 flex-row gap-2">
-                <View
-                  className={`flex-row items-center rounded-full px-2 py-1 ${isAfterToday(todo.date) && !todo.completed ? 'bg-red-100' : 'bg-gray-100'}`}>
-                  <Ionicons
-                    name="calendar"
-                    size={12}
-                    color={isAfterToday(todo.date) && !todo.completed ? '#B91C1C' : '#4B5563'}
-                  />
-                  <Text
-                    className={`ml-1 text-xs ${isAfterToday(todo.date) && !todo.completed ? 'text-red-700' : 'text-slate-600'}`}>
-                    {todo.date.toLocaleDateString()}
-                  </Text>
-                </View>
-
-                {todo.difficulty && (
+                <View className="mt-2 flex-row gap-2">
                   <View
-                    className={`flex-row items-center rounded-full px-2 py-1 ${DIFFICULTY_COLORS[todo.difficulty]}`}>
+                    className={`flex-row items-center rounded-full px-2 py-1 ${isAfterToday(todo.date) && !todo.completed ? 'bg-red-100' : 'bg-gray-100'}`}>
                     <Ionicons
-                      name="stats-chart"
+                      name="calendar"
                       size={12}
-                      color={
-                        {
-                          easy: '#047857',
-                          medium: '#92400E',
-                          hard: '#B91C1C',
-                        }[todo.difficulty]
-                      }
+                      color={isAfterToday(todo.date) && !todo.completed ? '#B91C1C' : '#4B5563'}
                     />
                     <Text
-                      className={`ml-1 text-xs ${DIFFICULTY_COLORS[todo.difficulty]} capitalize`}>
-                      {todo.difficulty}
+                      className={`ml-1 text-xs ${isAfterToday(todo.date) && !todo.completed ? 'text-red-700' : 'text-slate-600'}`}>
+                      {todo.date.toLocaleDateString()}
                     </Text>
                   </View>
+
+                  {todo.difficulty && (
+                    <View
+                      className={`flex-row items-center rounded-full px-2 py-1 ${DIFFICULTY_COLORS[todo.difficulty]}`}>
+                      <Ionicons
+                        name="stats-chart"
+                        size={12}
+                        color={
+                          {
+                            easy: '#047857',
+                            medium: '#92400E',
+                            hard: '#B91C1C',
+                          }[todo.difficulty]
+                        }
+                      />
+                      <Text
+                        className={`ml-1 text-xs ${DIFFICULTY_COLORS[todo.difficulty]} capitalize`}>
+                        {todo.difficulty}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+
+                {todo.note && (
+                  <Text className="mt-2 text-sm italic text-slate-500">{todo.note}</Text>
                 )}
               </View>
 
-              {todo.note && <Text className="mt-2 text-sm italic text-slate-500">{todo.note}</Text>}
+              <TouchableOpacity
+                onPress={() => toggleTodoComplete(id)}
+                className={`${todo.completed ? 'border-blue-500 bg-blue-500' : 'border-gray-400'} h-6 w-6 items-center justify-center rounded border-2`}>
+                {todo.completed && <Text className="text-white">✓</Text>}
+              </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              onPress={() => toggleTodoComplete(id)}
-              className={`${todo.completed ? 'border-blue-500 bg-blue-500' : 'border-gray-400'} h-6 w-6 items-center justify-center rounded border-2`}>
-              {todo.completed && <Text className="text-white">✓</Text>}
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
+          ))}
+        </View>
+      </ScrollView>
     </>
   );
 }
