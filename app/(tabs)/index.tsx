@@ -1,10 +1,12 @@
 import { Canvas, Image, useImage } from '@shopify/react-native-skia';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, Text, Image as RNImage } from 'react-native';
+import { View, Text, Image as RNImage, ImageBackground } from 'react-native';
 
 export default function Home() {
   const skiaImage = useImage(require('../../assets/images/Cat-1/Cat-1-Idle.png'));
+
+
 
   const [frame, setFrame] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
@@ -36,32 +38,41 @@ export default function Home() {
   }, [isAnimating]);
 
   return (
-    <>
-      <Stack.Screen options={{ title: 'Pet' }} />
-      <View className="flex-1 p-6">
-        <View className="mb-4 flex-row items-center justify-between">
-          <View className="flex-row items-center">
-            <RNImage
-              source={require('../../assets/images/coin.png')}
-              style={{ marginRight: 8, height: 24, width: 24 }}
-            />
-            <Text className="text-lg font-bold">100</Text>
+        <>
+          <Stack.Screen
+            options={{
+              title: 'Pet',
+              headerRight: () => (
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+                  <RNImage
+                    source={require('../../assets/images/coin.png')}
+                    style={{ marginRight: 8, height: 24, width: 24 }}
+                  />
+                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>100</Text>
+                </View>
+              ),
+            }}
+          />
+          <View className="flex-1">
+            <ImageBackground
+              source={require('../../assets/backgrounds/Late_morning.png')}
+              className="flex-1 justify-center items-center"
+            >
+              <View className="mt-48 self-center">
+                <Canvas style={{ width: frameWidth * 5, height: frameHeight * 5 }}>
+                  {skiaImage && (
+                    <Image
+                      image={skiaImage}
+                      x={-frame * frameWidth * 5}
+                      y={75}
+                      width={frameWidth * cols * 5}
+                      height={frameHeight * 5}
+                    />
+                  )}
+                </Canvas>
+              </View>
+            </ImageBackground>
           </View>
-        </View>
-        <View className="mt-48 self-center">
-          <Canvas style={{ width: frameWidth * 10, height: frameHeight * 10 }}>
-            {skiaImage && (
-              <Image
-                image={skiaImage}
-                x={-frame * frameWidth * 10}
-                y={0}
-                width={frameWidth * cols * 10}
-                height={frameHeight * 10}
-              />
-            )}
-          </Canvas>
-        </View>
-      </View>
-    </>
+        </>
   );
 }
