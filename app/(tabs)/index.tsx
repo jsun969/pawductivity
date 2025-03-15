@@ -40,15 +40,6 @@ export default function Home() {
       <Stack.Screen
         options={{
           title: 'Pet',
-          headerRight: () => (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-              <RNImage
-                source={require('../../assets/images/coin.png')}
-                style={{ marginRight: 8, height: 24, width: 24 }}
-              />
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>100</Text>
-            </View>
-          ),
         }}
       />
       <View className="flex-1">
