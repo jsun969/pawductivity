@@ -15,7 +15,7 @@ export default function TabLayout() {
           title: 'Todo List',
           tabBarIcon: ({ color }) => <TabBarIcon name="list-ul" color={color} />,
           headerRight: () => (
-            <Link href="/newTodo" asChild>
+            <Link href="/new-todo" asChild>
               <NewTodoButton />
             </Link>
           ),
