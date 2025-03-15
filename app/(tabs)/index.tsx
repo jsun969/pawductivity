@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { View, Text, Image as RNImage } from 'react-native';
 
 export default function Home() {
-  const skiaImage = useImage(require('../../assets/spritesheets/Cat-1-Idle.png'));
+  const skiaImage = useImage(require('../../assets/images/Cat-1/Cat-1-Idle.png'));
 
   const [frame, setFrame] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
