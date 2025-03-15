@@ -14,11 +14,11 @@ const STORE = [
     ],
   },
   {
-    category: 'Backgrounds',
+    category: 'Backgrounds',  
     items: [
-      { id: '5', name: 'Forest', filepath: require('../../assets/icon.png'), cost: 300, bought: false, equipped: false },
-      { id: '6', name: 'Beach', filepath: require('../../assets/icon.png'), cost: 500, bought: false, equipped: false },
-      { id: '7', name: 'City', filepath: require('../../assets/icon.png'), cost: 700, bought: false, equipped: false },
+      { id: '5', name: 'Bed', filepath: require('../../assets/icon.png'), cost: 300, bought: false, equipped: false },
+      { id: '6', name: 'House', filepath: require('../../assets/icon.png'), cost: 500, bought: false, equipped: false },
+      { id: '7', name: 'Fire Place', filepath: require('../../assets/icon.png'), cost: 700, bought: false, equipped: false },
     ],
   },
   {
@@ -27,8 +27,7 @@ const STORE = [
       { id: '8', name: 'Orange Cat', filepath: require('../../assets/images/Cat-1/Cat-1-Sitting.png'), cost: 1000, bought: false, equipped: false },
       { id: '9', name: 'Black Cat', filepath: require('../../assets/images/Cat-2/Cat-2-Sitting.png'), cost: 1200, bought: false, equipped: false },
       { id: '10', name: 'Grey Cat', filepath: require('../../assets/images/Cat-3/Cat-3-Sitting.png'), cost: 1500, bought: false, equipped: false },
-      { id: '11', name: 'Tan Cat', filepath: require('../../assets/images/Cat-4/Cat-4-Sitting.png'), cost: 1000, bought: false, equipped: false },
-      { id: '12', name: 'White Cat', filepath: require('../../assets/images/Cat-5/Cat-5-Sitting.png'), cost: 1200, bought: false, equipped: false },
+      { id: '11', name: 'White Cat', filepath: require('../../assets/images/Cat-5/Cat-5-Sitting.png'), cost: 1200, bought: false, equipped: false },
     ],
   },
 ];
