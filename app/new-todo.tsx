@@ -63,33 +63,39 @@ export default function Modal() {
           <Controller
             control={form.control}
             render={({ field }) => (
-              <Picker
-                selectedValue={field.value}
-                onValueChange={(itemValue) => field.onChange(itemValue)}>
-                {TODO_DIFFICULTY.map((difficulty) => (
-                  <Picker.Item
-                    label={`${difficulty} (${TODO_DIFFICULTY_TO_COINS[difficulty]} coins)`}
-                    value={difficulty}
-                    key={difficulty}
-                  />
-                ))}
-              </Picker>
+              <>
+                <Text className="text-lg font-bold">Difficulty</Text>
+                <Picker
+                  selectedValue={field.value}
+                  onValueChange={(itemValue) => field.onChange(itemValue)}>
+                  {TODO_DIFFICULTY.map((difficulty) => (
+                    <Picker.Item
+                      label={`${difficulty} (${TODO_DIFFICULTY_TO_COINS[difficulty]} coins)`}
+                      value={difficulty}
+                      key={difficulty}
+                    />
+                  ))}
+                </Picker>
+              </>
             )}
             name="difficulty"
           />
           <Controller
             control={form.control}
             render={({ field }) => (
-              <DateTimePicker
-                mode="single"
-                date={field.value}
-                onChange={({ date }) => field.onChange(date)}
-                classNames={{
-                  ...datePickerDefaultClassNames,
-                  selected: 'bg-gray-600',
-                  selected_label: 'text-white',
-                }}
-              />
+              <>
+                <Text className="text-lg font-bold">Date</Text>
+                <DateTimePicker
+                  mode="single"
+                  date={field.value}
+                  onChange={({ date }) => field.onChange(date)}
+                  classNames={{
+                    ...datePickerDefaultClassNames,
+                    selected: 'bg-gray-600',
+                    selected_label: 'text-white',
+                  }}
+                />
+              </>
             )}
             name="date"
           />
