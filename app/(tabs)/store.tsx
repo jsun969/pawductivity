@@ -3,11 +3,11 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, ScrollView }
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Define hat items
-const hatItems = [
-  { id: '1', name: 'Straw Hat', filepath: require('../../assets/icon.png'), cost: 100, bought: true, equipped: false },
-  { id: '2', name: 'Bandana', filepath: require('../../assets/icon.png'), cost: 200, bought: true, equipped: true },
-  { id: '3', name: 'Cap', filepath: require('../../assets/icon.png'), cost: 150, bought: true, equipped: false },
-  { id: '4', name: 'Bucket Hat', filepath: require('../../assets/icon.png'), cost: 1000, bought: false, equipped: false },
+const FurnitureItems = [
+  { id: '1', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 100, bought: true, equipped: false },
+  { id: '2', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 200, bought: true, equipped: true },
+  { id: '3', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 150, bought: true, equipped: false },
+  { id: '4', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 1000, bought: false, equipped: false },
 ];
 
 // Define background items
@@ -19,16 +19,19 @@ const backgroundItems = [
 
 // Define breed items
 const breedItems = [
-  { id: '8', name: 'Golden Retriever', filepath: require('../../assets/icon.png'), cost: 1000, bought: false, equipped: false },
-  { id: '9', name: 'Bulldog', filepath: require('../../assets/icon.png'), cost: 1200, bought: false, equipped: false },
-  { id: '10', name: 'Poodle', filepath: require('../../assets/icon.png'), cost: 1500, bought: false, equipped: false },
+  { id: '8', name: 'Orange Cat', filepath: require('../../assets/images/Cat-1/Cat-1-Sitting.png'), cost: 1000, bought: false, equipped: false },
+  { id: '9', name: 'Black Cat', filepath: require('../../assets/images/Cat-2/Cat-2-Sitting.png'), cost: 1200, bought: false, equipped: false },
+  { id: '10', name: 'Grey Cat', filepath: require('../../assets/images/Cat-3/Cat-3-Sitting.png'), cost: 1500, bought: false, equipped: false },
+  { id: '11', name: 'Tan Cat', filepath: require('../../assets/images/Cat-4/Cat-4-Sitting.png'), cost: 1000, bought: false, equipped: false },
+  { id: '12', name: 'White Cat', filepath: require('../../assets/images/Cat-5/Cat-5-Sitting.png'), cost: 1200, bought: false, equipped: false },
+  { id: '13', name: 'White-2 Cat', filepath: require('../../assets/images/Cat-6/Cat-6-Sitting.png'), cost: 1500, bought: false, equipped: false },
 ];
 
 export default function ExpandableList() {
   const [hatExpanded, setHatExpanded] = useState(false);
   const [backgroundExpanded, setBackgroundExpanded] = useState(false);
   const [breedExpanded, setBreedExpanded] = useState(false);
-  const [hatList, setHatList] = useState(hatItems);
+  const [hatList, setHatList] = useState(FurnitureItems);
   const [backgroundList, setBackgroundList] = useState(backgroundItems);
   const [breedList, setBreedList] = useState(breedItems);
 
@@ -66,7 +69,7 @@ export default function ExpandableList() {
       {/* Hats Section */}
       <TouchableOpacity onPress={() => setHatExpanded(!hatExpanded)}>
         <View style={styles.header}>
-          <Text style={styles.heading}>Hats</Text>
+          <Text style={styles.heading}>Furniture</Text>
           <Icon
             name={hatExpanded ? 'chevron-up' : 'chevron-down'}
             size={24}
