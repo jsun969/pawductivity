@@ -53,7 +53,7 @@ export default function Home() {
       />
       <View className="flex-1">
         <ImageBackground
-          source={require('../../assets/backgrounds/Late_morning.png')}
+          source={require('../../assets/images/Backgrounds/Late_morning.png')}
           className="flex-1 items-center justify-center">
           <View className="mt-[30rem] self-center">
             <Canvas style={{ width: frameWidth * 5, height: frameHeight * 5 }}>
