@@ -16,26 +16,26 @@ const STORE = [
     items: [
       {
         id: '1',
-        name: 'Furniture',
-        filepath: require('../../assets/icon.png'),
+        name: 'Red Couch',
+        filepath: require('../../assets/images/Furniture/Couch_large_2_red.png'),
         cost: 100,
       },
       {
         id: '2',
-        name: 'Furniture',
-        filepath: require('../../assets/icon.png'),
+        name: 'Blue Couch',
+        filepath: require('../../assets/images/Furniture/Couch_large_blue.png'),
         cost: 200,
       },
       {
         id: '3',
-        name: 'Furniture',
-        filepath: require('../../assets/icon.png'),
+        name: 'Table',
+        filepath: require('../../assets/images/Furniture/Table_medium.png'),
         cost: 150,
       },
       {
         id: '4',
-        name: 'Furniture',
-        filepath: require('../../assets/icon.png'),
+        name: 'Countertop',
+        filepath: require('../../assets/images/Furniture/Countertop.png'),
         cost: 1000,
       },
     ],
@@ -154,6 +154,13 @@ export default function ExpandableList() {
 
   return (
     <ScrollView className="flex-1 p-4">
+      <View className="flex-row items-center">
+        <Image
+          source={require('../../assets/images/coin.png')}
+          style={{ marginRight: 8, height: 35, width: 35 }}
+        />
+        <Text className="text-4xl font-bold">{coins}</Text>
+      </View>
       {STORE.map(({ category, items }, index) => {
         const isCategoryOpen = openedCategories.has(category);
         return (
