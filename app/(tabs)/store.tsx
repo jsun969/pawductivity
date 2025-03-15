@@ -6,9 +6,13 @@ import { ScreenContent } from '~/components/ScreenContent';
 export default function Home() {
   return (
     <>
-      <Stack.Screen options={{ title: 'Tab Two' }} />
+      <Stack.Screen options={{ title: 'Store' }} />
       <View className="flex-1 p-6">
-        <ScreenContent path="app/(tabs)/two.tsx" title="Tab Two" />
+        <ScreenContent
+          path="app/(tabs)/store
+        .tsx"
+          title="Store"
+        />
       </View>
     </>
   );
