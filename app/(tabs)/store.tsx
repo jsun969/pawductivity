@@ -1,14 +1,7 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  ScrollView,
-} from 'react-native';
+import { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 
 const STORE = [
   {
@@ -109,6 +102,15 @@ export default function ExpandableList() {
   const [equippedBreed, setEquippedBreed] = useState('');
   const [coins, setCoins] = useState(0);
 
+  // Load images at the top level
+  const images: { [key: string]: ReturnType<typeof useImage> } = {};
+  STORE.forEach(({ items }) => {
+    items.forEach((item) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      images[item.id] = useImage(item.filepath);
+    });
+  });
+
   // Handle item purchase
   const handleBuyItem = (id: string, cost: number) => {
     setBoughtItems((s) => {
@@ -155,10 +157,15 @@ export default function ExpandableList() {
   return (
     <ScrollView className="flex-1 p-4">
       <View className="flex-row items-center">
-        <Image
-          source={require('../../assets/images/coin.png')}
-          style={{ marginRight: 8, height: 35, width: 35 }}
-        />
+        <Canvas style={{ width: 35, height: 35 }}>
+          <SkiaImage
+            image={useImage(require('../../assets/images/coin.png'))}
+            x={0}
+            y={0}
+            width={35}
+            height={35}
+          />
+        </Canvas>
         <Text className="text-4xl font-bold">{coins}</Text>
       </View>
       {STORE.map(({ category, items }, index) => {
@@ -197,7 +204,9 @@ export default function ExpandableList() {
                 renderItem={({ item }) => (
                   <View className="m-2 flex-1 rounded-lg bg-gray-100 p-4">
                     <Text className="mb-2 text-base font-bold">{item.name}</Text>
-                    <Image source={item.filepath} style={styles.largeImage} resizeMode="contain" />
+                    <Canvas style={styles.largeImage}>
+                      <SkiaImage image={images[item.id]} x={0} y={0} width={120} height={120} />
+                    </Canvas>
                     {boughtItems.has(item.id) ? (
                       equippedItems.has(item.id) ? (
                         <Text className="text-sm text-green-600">Equipped</Text>
