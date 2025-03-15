@@ -205,7 +205,13 @@ export default function ExpandableList() {
                   <View className="m-2 flex-1 rounded-lg bg-gray-100 p-4">
                     <Text className="mb-2 text-base font-bold">{item.name}</Text>
                     <Canvas style={styles.largeImage}>
-                      <SkiaImage image={images[item.id]} x={0} y={0} width={120} height={120} />
+                      <SkiaImage
+                        image={images[item.id]}
+                        x={category === 'Breed' ? -40 : 0}
+                        y={category === 'Breed' ? -40 : 0}
+                        width={category === 'Breed' ? 200 : 120}
+                        height={category === 'Breed' ? 200 : 120}
+                      />
                     </Canvas>
                     {boughtItems.has(item.id) ? (
                       equippedItems.has(item.id) ? (
