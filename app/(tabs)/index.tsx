@@ -7,17 +7,33 @@ export default function Home() {
   const skiaImage = useImage(require('../../assets/spritesheets/Cat-1-Idle.png'));
 
   const [frame, setFrame] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
   const cols = 10;
   const frameWidth = 50;
   const frameHeight = 50;
   const totalFrames = 10;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFrame((prevFrame) => (prevFrame + 1) % totalFrames);
-    }, 120);
+    let interval: NodeJS.Timeout;
+    if (isAnimating) {
+      interval = setInterval(() => {
+        setFrame((prevFrame) => {
+          const nextFrame = (prevFrame + 1) % totalFrames;
+          if (nextFrame === 0) {
+            setIsAnimating(false);
+          }
+          return nextFrame;
+        });
+      }, 150);
+    } else {
+      const randomDelay = Math.random() * 4000 + 1000;
+      const timeout = setTimeout(() => {
+        setIsAnimating(true);
+      }, randomDelay);
+      return () => clearTimeout(timeout);
+    }
     return () => clearInterval(interval);
-  }, []);
+  }, [isAnimating]);
 
   return (
     <>
