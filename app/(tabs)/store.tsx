@@ -180,18 +180,6 @@ export default function ExpandableList() {
 
   return (
     <ScrollView className="flex-1 p-4">
-      <View className="flex-row items-center">
-        <Canvas style={{ width: 35, height: 35 }}>
-          <SkiaImage
-            image={useImage(require('../../assets/images/coin.png'))}
-            x={0}
-            y={0}
-            width={35}
-            height={35}
-          />
-        </Canvas>
-        <Text className="text-4xl font-bold">{coins}</Text>
-      </View>
       {STORE.map(({ category, items }, index) => {
         const isCategoryOpen = openedCategories.has(category);
         return (
