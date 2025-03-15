@@ -6,8 +6,6 @@ import { View, Text, Image as RNImage, ImageBackground } from 'react-native';
 export default function Home() {
   const skiaImage = useImage(require('../../assets/images/Cat-1/Cat-1-Idle.png'));
 
-
-
   const [frame, setFrame] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
   const cols = 10;
@@ -38,41 +36,40 @@ export default function Home() {
   }, [isAnimating]);
 
   return (
-        <>
-          <Stack.Screen
-            options={{
-              title: 'Pet',
-              headerRight: () => (
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
-                  <RNImage
-                    source={require('../../assets/images/coin.png')}
-                    style={{ marginRight: 8, height: 24, width: 24 }}
-                  />
-                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>100</Text>
-                </View>
-              ),
-            }}
-          />
-          <View className="flex-1">
-            <ImageBackground
-              source={require('../../assets/backgrounds/Late_morning.png')}
-              className="flex-1 justify-center items-center"
-            >
-              <View className="mt-[30rem] self-center">
-                <Canvas style={{ width: frameWidth * 5, height: frameHeight * 5 }}>
-                  {skiaImage && (
-                    <Image
-                      image={skiaImage}
-                      x={-frame * frameWidth * 5}
-                      y={0}
-                      width={frameWidth * cols * 5}
-                      height={frameHeight * 5}
-                    />
-                  )}
-                </Canvas>
-              </View>
-            </ImageBackground>
+    <>
+      <Stack.Screen
+        options={{
+          title: 'Pet',
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16 }}>
+              <RNImage
+                source={require('../../assets/images/coin.png')}
+                style={{ marginRight: 8, height: 24, width: 24 }}
+              />
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>100</Text>
+            </View>
+          ),
+        }}
+      />
+      <View className="flex-1">
+        <ImageBackground
+          source={require('../../assets/backgrounds/Late_morning.png')}
+          className="flex-1 items-center justify-center">
+          <View className="mt-[30rem] self-center">
+            <Canvas style={{ width: frameWidth * 5, height: frameHeight * 5 }}>
+              {skiaImage && (
+                <Image
+                  image={skiaImage}
+                  x={-frame * frameWidth * 5}
+                  y={0}
+                  width={frameWidth * cols * 5}
+                  height={frameHeight * 5}
+                />
+              )}
+            </Canvas>
           </View>
-        </>
+        </ImageBackground>
+      </View>
+    </>
   );
 }
