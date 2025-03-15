@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Platform, TextInput, View } from 'react-native';
+import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker';
 
 export default function Modal() {
   const [name, setName] = useState('');
   const [notes, setNotes] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState<DateType>();
   const [time, setTime] = useState('');
+  const defaultStyles = useDefaultStyles();
+
 
   return (
     <>
@@ -24,7 +27,15 @@ export default function Modal() {
           value={notes}
           onChangeText={setNotes}
         />
-        {/* TODO: Replace with time/date pickers from a package */}
+        
+        <DateTimePicker
+      mode="single"
+      date={date}
+      onChange={({ date }) =>  setDate(date)}
+      styles={defaultStyles}
+      />
+        
+        {/* TODO: Replace with time/date pickers from a package
         <TextInput
           className="mb-4 rounded-md border border-gray-600 p-3"
           placeholder="Date (optional)"
@@ -36,7 +47,7 @@ export default function Modal() {
           placeholder="Time (optional)"
           value={time}
           onChangeText={setTime}
-        />
+        /> */}
       </View>
     </>
   );
