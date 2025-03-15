@@ -1,6 +1,6 @@
 import { Canvas, Image, useImage } from '@shopify/react-native-skia';
-import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { View, Text, Image as RNImage } from 'react-native';
 
 export default function Home() {
@@ -32,7 +32,7 @@ export default function Home() {
             <Text className="text-lg font-bold">100</Text>
           </View>
         </View>
-        <View className="self-center">
+        <View className="mt-48 self-center">
           <Canvas style={{ width: frameWidth * 10, height: frameHeight * 10 }}>
             {skiaImage && (
               <Image
