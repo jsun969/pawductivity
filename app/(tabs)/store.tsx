@@ -1,21 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-// Define items
-const items = [
+// Define hat items
+const hatItems = [
   { id: '1', name: 'Straw Hat', filepath: require('../../assets/icon.png'), cost: 100, bought: true, equipped: false },
   { id: '2', name: 'Bandana', filepath: require('../../assets/icon.png'), cost: 200, bought: true, equipped: true },
   { id: '3', name: 'Cap', filepath: require('../../assets/icon.png'), cost: 150, bought: true, equipped: false },
   { id: '4', name: 'Bucket Hat', filepath: require('../../assets/icon.png'), cost: 1000, bought: false, equipped: false },
 ];
 
+// Define background items
+const backgroundItems = [
+  { id: '5', name: 'Forest', filepath: require('../../assets/icon.png'), cost: 300, bought: false, equipped: false },
+  { id: '6', name: 'Beach', filepath: require('../../assets/icon.png'), cost: 500, bought: false, equipped: false },
+  { id: '7', name: 'City', filepath: require('../../assets/icon.png'), cost: 700, bought: false, equipped: false },
+];
+
+// Define breed items
+const breedItems = [
+  { id: '8', name: 'Golden Retriever', filepath: require('../../assets/icon.png'), cost: 1000, bought: false, equipped: false },
+  { id: '9', name: 'Bulldog', filepath: require('../../assets/icon.png'), cost: 1200, bought: false, equipped: false },
+  { id: '10', name: 'Poodle', filepath: require('../../assets/icon.png'), cost: 1500, bought: false, equipped: false },
+];
+
 export default function ExpandableList() {
-  const [expanded, setExpanded] = useState(false);
-  const [itemList, setItemList] = useState(items);
+  const [hatExpanded, setHatExpanded] = useState(false);
+  const [backgroundExpanded, setBackgroundExpanded] = useState(false);
+  const [breedExpanded, setBreedExpanded] = useState(false);
+  const [hatList, setHatList] = useState(hatItems);
+  const [backgroundList, setBackgroundList] = useState(backgroundItems);
+  const [breedList, setBreedList] = useState(breedItems);
 
   // Handle item purchase
-  const handleBuyItem = (id) => {
+  const handleBuyItem = (id, setItemList) => {
     setItemList((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, bought: true } : item
@@ -24,7 +42,7 @@ export default function ExpandableList() {
   };
 
   // Handle item equip
-  const handleEquipItem = (id) => {
+  const handleEquipItem = (id, setItemList) => {
     setItemList((prevItems) =>
       prevItems.map((item) =>
         item.id === id ? { ...item, equipped: !item.equipped } : { ...item, equipped: false }
@@ -33,33 +51,32 @@ export default function ExpandableList() {
   };
 
   // Reorder items: equipped item first, then bought items, then unbought items
-  const reorderItems = () => {
-    setItemList((prevItems) =>
-      prevItems.sort((a, b) => {
-        if (a.equipped && !b.equipped) return -1;
-        if (!a.equipped && b.equipped) return 1;
-        if (a.bought && !b.bought) return -1;
-        if (!a.bought && b.bought) return 1;
-        return 0;
-      })
-    );
+  const reorderItems = (itemList) => {
+    return itemList.sort((a, b) => {
+      if (a.equipped && !b.equipped) return -1;
+      if (!a.equipped && b.equipped) return 1;
+      if (a.bought && !b.bought) return -1;
+      if (!a.bought && b.bought) return 1;
+      return 0;
+    });
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => setExpanded(!expanded)}>
+    <ScrollView style={styles.container}>
+      {/* Hats Section */}
+      <TouchableOpacity onPress={() => setHatExpanded(!hatExpanded)}>
         <View style={styles.header}>
           <Text style={styles.heading}>Hats</Text>
           <Icon
-            name={expanded ? 'chevron-up' : 'chevron-down'}
+            name={hatExpanded ? 'chevron-up' : 'chevron-down'}
             size={24}
             color="#000"
           />
         </View>
       </TouchableOpacity>
-      {expanded && (
+      {hatExpanded && (
         <FlatList
-          data={itemList}
+          data={reorderItems(hatList)}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
@@ -69,7 +86,7 @@ export default function ExpandableList() {
                 item.equipped ? (
                   <Text style={styles.itemStatus}>Equipped</Text>
                 ) : (
-                  <TouchableOpacity onPress={() => handleEquipItem(item.id)}>
+                  <TouchableOpacity onPress={() => handleEquipItem(item.id, setHatList)}>
                     <Text style={styles.equipButton}>Equip</Text>
                   </TouchableOpacity>
                 )
@@ -77,23 +94,107 @@ export default function ExpandableList() {
                 <Text style={styles.itemCost}>${item.cost}</Text>
               )}
               {!item.bought && (
-                <TouchableOpacity onPress={() => handleBuyItem(item.id)}>
+                <TouchableOpacity onPress={() => handleBuyItem(item.id, setHatList)}>
                   <Text style={styles.buyButton}>Buy</Text>
                 </TouchableOpacity>
               )}
             </View>
           )}
-          numColumns={2} // Display items side by side
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          ListFooterComponent={reorderItems}
+          numColumns={2}
+          scrollEnabled={false} // Disable scrolling for FlatList
         />
       )}
-    </View>
+
+      {/* Backgrounds Section */}
+      <TouchableOpacity onPress={() => setBackgroundExpanded(!backgroundExpanded)}>
+        <View style={styles.header}>
+          <Text style={styles.heading}>Backgrounds</Text>
+          <Icon
+            name={backgroundExpanded ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#000"
+          />
+        </View>
+      </TouchableOpacity>
+      {backgroundExpanded && (
+        <FlatList
+          data={reorderItems(backgroundList)}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Image source={item.filepath} style={styles.itemImage} />
+              {item.bought ? (
+                item.equipped ? (
+                  <Text style={styles.itemStatus}>Equipped</Text>
+                ) : (
+                  <TouchableOpacity onPress={() => handleEquipItem(item.id, setBackgroundList)}>
+                    <Text style={styles.equipButton}>Equip</Text>
+                  </TouchableOpacity>
+                )
+              ) : (
+                <Text style={styles.itemCost}>${item.cost}</Text>
+              )}
+              {!item.bought && (
+                <TouchableOpacity onPress={() => handleBuyItem(item.id, setBackgroundList)}>
+                  <Text style={styles.buyButton}>Buy</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          numColumns={2}
+          scrollEnabled={false} // Disable scrolling for FlatList
+        />
+      )}
+
+      {/* Breeds Section */}
+      <TouchableOpacity onPress={() => setBreedExpanded(!breedExpanded)}>
+        <View style={styles.header}>
+          <Text style={styles.heading}>Breeds</Text>
+          <Icon
+            name={breedExpanded ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#000"
+          />
+        </View>
+      </TouchableOpacity>
+      {breedExpanded && (
+        <FlatList
+          data={reorderItems(breedList)}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Image source={item.filepath} style={styles.itemImage} />
+              {item.bought ? (
+                item.equipped ? (
+                  <Text style={styles.itemStatus}>Equipped</Text>
+                ) : (
+                  <TouchableOpacity onPress={() => handleEquipItem(item.id, setBreedList)}>
+                    <Text style={styles.equipButton}>Equip</Text>
+                  </TouchableOpacity>
+                )
+              ) : (
+                <Text style={styles.itemCost}>${item.cost}</Text>
+              )}
+              {!item.bought && (
+                <TouchableOpacity onPress={() => handleBuyItem(item.id, setBreedList)}>
+                  <Text style={styles.buyButton}>Buy</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          numColumns={2}
+          scrollEnabled={false} // Disable scrolling for FlatList
+        />
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 16,
   },
   header: {
@@ -138,10 +239,5 @@ const styles = StyleSheet.create({
   equipButton: {
     color: 'orange',
     fontWeight: 'bold',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#ccc',
-    marginVertical: 8,
   },
 });
