@@ -1,9 +1,11 @@
 import { Stack } from 'expo-router';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
-import { ScreenContent } from '../../components/ScreenContent';
+import { useTodoStore } from '~/store/todo';
 
-export default function Home() {
+export default function TodoPage() {
+  const { todos } = useTodoStore();
+
   return (
     <>
       <Stack.Screen
@@ -11,8 +13,12 @@ export default function Home() {
           title: 'Todo List',
         }}
       />
-      <View className="flex-1 p-6">
-        <ScreenContent path="app/(tabs)/todo.tsx" title="Todo List" />
+      <View className="flex-1 space-y-2 p-6">
+        {Array.from(todos).map(([id, todo]) => (
+          <Text key={id} className="text-2xl">
+            {todo.name}
+          </Text>
+        ))}
       </View>
     </>
   );
