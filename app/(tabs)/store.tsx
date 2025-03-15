@@ -1,65 +1,154 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { View, Text, TouchableOpacity, FlatList, Image, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  ScrollView,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const STORE = [
   {
-    category: 'Hats',
+    category: 'Furniture',
     items: [
-      { id: '1', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 100, bought: true, equipped: false },
-      { id: '2', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 200, bought: true, equipped: true },
-      { id: '3', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 150, bought: true, equipped: false },
-      { id: '4', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 1000, bought: false, equipped: false },
+      {
+        id: '1',
+        name: 'Furniture',
+        filepath: require('../../assets/icon.png'),
+        cost: 100,
+      },
+      {
+        id: '2',
+        name: 'Furniture',
+        filepath: require('../../assets/icon.png'),
+        cost: 200,
+      },
+      {
+        id: '3',
+        name: 'Furniture',
+        filepath: require('../../assets/icon.png'),
+        cost: 150,
+      },
+      {
+        id: '4',
+        name: 'Furniture',
+        filepath: require('../../assets/icon.png'),
+        cost: 1000,
+      },
     ],
   },
   {
     category: 'Backgrounds',
     items: [
-      { id: '5', name: 'Forest', filepath: require('../../assets/icon.png'), cost: 300, bought: false, equipped: false },
-      { id: '6', name: 'Beach', filepath: require('../../assets/icon.png'), cost: 500, bought: false, equipped: false },
-      { id: '7', name: 'City', filepath: require('../../assets/icon.png'), cost: 700, bought: false, equipped: false },
+      {
+        id: '5',
+        name: 'Forest',
+        filepath: require('../../assets/icon.png'),
+        cost: 300,
+      },
+      {
+        id: '6',
+        name: 'Beach',
+        filepath: require('../../assets/icon.png'),
+        cost: 500,
+      },
+      {
+        id: '7',
+        name: 'City',
+        filepath: require('../../assets/icon.png'),
+        cost: 700,
+      },
     ],
   },
   {
     category: 'Breed',
     items: [
-      { id: '8', name: 'Orange Cat', filepath: require('../../assets/images/Cat-1/Cat-1-Sitting.png'), cost: 1000, bought: false, equipped: false },
-      { id: '9', name: 'Black Cat', filepath: require('../../assets/images/Cat-2/Cat-2-Sitting.png'), cost: 1200, bought: false, equipped: false },
-      { id: '10', name: 'Grey Cat', filepath: require('../../assets/images/Cat-3/Cat-3-Sitting.png'), cost: 1500, bought: false, equipped: false },
-      { id: '11', name: 'Tan Cat', filepath: require('../../assets/images/Cat-4/Cat-4-Sitting.png'), cost: 1000, bought: false, equipped: false },
-      { id: '12', name: 'White Cat', filepath: require('../../assets/images/Cat-5/Cat-5-Sitting.png'), cost: 1200, bought: false, equipped: false },
+      {
+        id: '8',
+        name: 'Orange Cat',
+        filepath: require('../../assets/images/Cat-1/Cat-1-Sitting.png'),
+        cost: 1000,
+      },
+      {
+        id: '9',
+        name: 'Black Cat',
+        filepath: require('../../assets/images/Cat-2/Cat-2-Sitting.png'),
+        cost: 1200,
+      },
+      {
+        id: '10',
+        name: 'Grey Cat',
+        filepath: require('../../assets/images/Cat-3/Cat-3-Sitting.png'),
+        cost: 1500,
+      },
+      {
+        id: '11',
+        name: 'Tan Cat',
+        filepath: require('../../assets/images/Cat-4/Cat-4-Sitting.png'),
+        cost: 1000,
+      },
+      {
+        id: '12',
+        name: 'White Cat',
+        filepath: require('../../assets/images/Cat-5/Cat-5-Sitting.png'),
+        cost: 1200,
+      },
     ],
   },
 ];
 
 export default function ExpandableList() {
   const [openedCategories, setOpenedCategories] = useState(new Set());
+  const [boughtItems, setBoughtItems] = useState(new Set());
+  const [equippedItems, setEquippedItems] = useState(new Set());
+  const [equippedFurniture, setEquippedFurniture] = useState('');
+  const [equippedBackground, setEquippedBackground] = useState('');
+  const [equippedBreed, setEquippedBreed] = useState('');
+  const [coins, setCoins] = useState(0);
 
   // Handle item purchase
-  const handleBuyItem = (id: string, setItemList) => {
-    setItemList((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, bought: true } : item))
-    );
+  const handleBuyItem = (id: string, cost: number) => {
+    setBoughtItems((s) => {
+      const newSet = new Set(s);
+      newSet.add(id);
+      return newSet;
+    });
+    // do this when there is storage, but for now just allow them to buy anything
+    /*
+    if (coins >= cost) {
+      setCoins(coins - cost);
+      setBoughtItems((s) => {
+        const newSet = new Set(s);
+        newSet.add(id);
+        return newSet;
+      });
+    } else {
+      // tell them not enough coins
+    }
+      */
   };
 
   // Handle item equip
-  const handleEquipItem = (id: string, setItemList) => {
-    setItemList((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, equipped: !item.equipped } : { ...item, equipped: false }
-      )
-    );
-  };
-
-  // Reorder items: equipped item first, then bought items, then unbought items
-  const reorderItems = (itemList) => {
-    return itemList.sort((a, b) => {
-      if (a.equipped && !b.equipped) return -1;
-      if (!a.equipped && b.equipped) return 1;
-      if (a.bought && !b.bought) return -1;
-      if (!a.bought && b.bought) return 1;
-      return 0;
+  const handleEquipItem = (id: string, type: string) => {
+    setEquippedItems((s) => {
+      const newSet = new Set(s);
+      if (type === 'Furniture') {
+        newSet.delete(equippedFurniture);
+        setEquippedFurniture(id);
+      }
+      if (type === 'Backgrounds') {
+        newSet.delete(equippedBackground);
+        setEquippedBackground(id);
+      }
+      if (type === 'Breed') {
+        newSet.delete(equippedBreed);
+        setEquippedBreed(id);
+      }
+      newSet.add(id);
+      return newSet;
     });
   };
 
@@ -84,9 +173,8 @@ export default function ExpandableList() {
                     return newSet;
                   });
                 }
-              }}
-            >
-              <View className="flex-row justify-between items-center py-2">
+              }}>
+              <View className="flex-row items-center justify-between py-2">
                 <Text className="text-lg font-bold">{category}</Text>
                 <Icon
                   name={isCategoryOpen ? 'chevron-up' : 'chevron-down'}
@@ -97,30 +185,26 @@ export default function ExpandableList() {
             </TouchableOpacity>
             {isCategoryOpen && (
               <FlatList
-                data={reorderItems(items)}
+                data={items}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                  <View className="flex-1 m-2 p-4 bg-gray-100 rounded-lg">
-                    <Text className="text-base font-bold mb-2">{item.name}</Text>
-                    <Image
-                      source={item.filepath}
-                      style={category === 'Breed' ? styles.largeImage : styles.itemImage} // Conditional style
-                      resizeMode="contain"
-                    />
-                    {item.bought ? (
-                      item.equipped ? (
+                  <View className="m-2 flex-1 rounded-lg bg-gray-100 p-4">
+                    <Text className="mb-2 text-base font-bold">{item.name}</Text>
+                    <Image source={item.filepath} style={styles.largeImage} resizeMode="contain" />
+                    {boughtItems.has(item.id) ? (
+                      equippedItems.has(item.id) ? (
                         <Text className="text-sm text-green-600">Equipped</Text>
                       ) : (
-                        <TouchableOpacity onPress={() => handleEquipItem(item.id, setItemList)}>
-                          <Text className="text-orange-600 font-bold">Equip</Text>
+                        <TouchableOpacity onPress={() => handleEquipItem(item.id, category)}>
+                          <Text className="font-bold text-orange-600">Equip</Text>
                         </TouchableOpacity>
                       )
                     ) : (
                       <Text className="text-sm text-gray-600">${item.cost}</Text>
                     )}
-                    {!item.bought && (
-                      <TouchableOpacity onPress={() => handleBuyItem(item.id, setItemList)}>
-                        <Text className="text-blue-600 font-bold">Buy</Text>
+                    {!boughtItems.has(item.id) && (
+                      <TouchableOpacity onPress={() => handleBuyItem(item.id, item.cost)}>
+                        <Text className="font-bold text-blue-600">Buy</Text>
                       </TouchableOpacity>
                     )}
                   </View>
@@ -137,13 +221,8 @@ export default function ExpandableList() {
 }
 
 const styles = StyleSheet.create({
-  itemImage: {
-    width: 50, // Default size for non-breed items
-    height: 50,
-    marginBottom: 8,
-  },
   largeImage: {
-    width: 120, // Larger size for breed items
+    width: 120,
     height: 120,
     marginBottom: 8,
   },
