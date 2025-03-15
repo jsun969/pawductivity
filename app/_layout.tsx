@@ -12,7 +12,7 @@ export default function RootLayout() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="newTodo" options={{ presentation: 'modal', title: 'New Todo' }} />
+      <Stack.Screen name="new-todo" options={{ presentation: 'modal', title: 'New Todo' }} />
     </Stack>
   );
 }
