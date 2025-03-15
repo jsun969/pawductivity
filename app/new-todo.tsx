@@ -8,7 +8,7 @@ import DateTimePicker, {
 } from 'react-native-ui-datepicker';
 
 import { Button } from '~/components/Button';
-import { TODO_DIFFICULTY } from '~/constants';
+import { TODO_DIFFICULTY, TODO_DIFFICULTY_TO_COINS } from '~/constants';
 import { Todo, useTodoStore } from '~/store/todo';
 
 export default function Modal() {
@@ -67,7 +67,11 @@ export default function Modal() {
                 selectedValue={field.value}
                 onValueChange={(itemValue) => field.onChange(itemValue)}>
                 {TODO_DIFFICULTY.map((difficulty) => (
-                  <Picker.Item label={difficulty} value={difficulty} key={difficulty} />
+                  <Picker.Item
+                    label={`${difficulty} (${TODO_DIFFICULTY_TO_COINS[difficulty]} coins)`}
+                    value={difficulty}
+                    key={difficulty}
+                  />
                 ))}
               </Picker>
             )}
