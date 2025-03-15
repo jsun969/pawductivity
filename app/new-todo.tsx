@@ -11,12 +11,14 @@ import { Button } from '~/components/Button';
 import { TODO_DIFFICULTY, TODO_DIFFICULTY_TO_COINS } from '~/constants';
 import { Todo, useTodoStore } from '~/store/todo';
 
+const TODAY = new Date(new Date().setHours(0, 0, 0, 0));
+
 export default function Modal() {
   const form = useForm<Omit<Todo, 'completed'>>({
     defaultValues: {
       name: '',
       note: '',
-      date: new Date(new Date().setHours(0, 0, 0, 0)),
+      date: TODAY,
       difficulty: 'medium',
     },
   });
@@ -26,8 +28,8 @@ export default function Modal() {
   return (
     <>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      <ScrollView className="rounded-lg p-4">
-        <View className="flex flex-col gap-4">
+      <ScrollView className="rounded-lg">
+        <View className="flex flex-col gap-4 p-4 pb-8">
           <Controller
             control={form.control}
             rules={{ required: 'Name is required' }}
@@ -91,9 +93,11 @@ export default function Modal() {
                   onChange={({ date }) => field.onChange(date)}
                   classNames={{
                     ...datePickerDefaultClassNames,
-                    selected: 'bg-gray-600',
+                    selected: 'bg-slate-600',
                     selected_label: 'text-white',
+                    disabled_label: 'text-gray-400',
                   }}
+                  minDate={TODAY}
                 />
               </>
             )}
@@ -105,7 +109,6 @@ export default function Modal() {
               addTodo({ ...data, completed: false });
               router.replace('/todo');
             })}
-            className="mb-4"
           />
         </View>
       </ScrollView>
