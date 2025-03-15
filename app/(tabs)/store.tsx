@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const STORE = [
   {
-    category: 'Hats',
+    category: 'Furniture',
     items: [
       { id: '1', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 100, bought: true, equipped: false },
       { id: '2', name: 'Furniture', filepath: require('../../assets/icon.png'), cost: 200, bought: true, equipped: true },
@@ -104,7 +104,7 @@ export default function ExpandableList() {
                     <Text className="text-base font-bold mb-2">{item.name}</Text>
                     <Image
                       source={item.filepath}
-                      style={category === 'Breed' ? styles.largeImage : styles.itemImage} // Conditional style
+                      style={styles.itemImage} // Unified style
                       resizeMode="contain"
                     />
                     {item.bought ? (
@@ -138,12 +138,12 @@ export default function ExpandableList() {
 
 const styles = StyleSheet.create({
   itemImage: {
-    width: 50, // Default size for non-breed items
-    height: 50,
+    width: 120, // Unified size for all items
+    height: 120,
     marginBottom: 8,
   },
   largeImage: {
-    width: 120, // Larger size for breed items
+    width: 120, // Removed separate style for breed items
     height: 120,
     marginBottom: 8,
   },
