@@ -1,6 +1,6 @@
 import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { Button } from '~/components/Button';
@@ -71,7 +71,7 @@ const STORE = [
         cost: 700,
       },
       {
-        id: '8',
+        id: '9',
         name: 'Evening',
         filepath: require('../../assets/images/Backgrounds/Evening.png'),
         cost: 700,
@@ -125,7 +125,7 @@ const STORE = [
       },
     ],
   },
-] as const;
+];
 
 export default function ExpandableList() {
   const [openedCategories, setOpenedCategories] = useState(new Set());
@@ -159,21 +159,6 @@ export default function ExpandableList() {
 
   return (
     <ScrollView className="flex-1 p-4">
-      <View className="flex-row items-center">
-        <Canvas style={{ width: 35, height: 35 }}>
-          <SkiaImage
-            image={useImage(require('../../assets/images/coin.png'))}
-            x={0}
-            y={0}
-            width={35}
-            height={35}
-          />
-        </Canvas>
-        <Text className="text-4xl font-bold">{coins}</Text>
-      </View>
-      <Button title="add 100 coins" onPress={() => setCoins((prev) => prev + 100)}>
-        more coins
-      </Button>
       {STORE.map(({ category, items }, index) => {
         const isCategoryOpen = openedCategories.has(category);
         return (

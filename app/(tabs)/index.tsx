@@ -1,20 +1,84 @@
-import { Canvas, Image, useImage } from '@shopify/react-native-skia';
+import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ImageBackground, Dimensions } from 'react-native';
-
-import { useEquippedStore } from '~/store/equipped';
+import { View, ImageBackground, Dimensions, StyleSheet, Image as RNImage } from 'react-native';
 import { useTodoStore } from '~/store/todo';
+import { useEquippedStore } from '~/store/equipped';
 
-type CatImages = {
-  [key: string]: {
-    laying: any;
-    idle: any;
-    walk: any;
-  };
-};
+const STORE = [
+  {
+    category: 'Furniture',
+    items: [
+      {
+        id: '0',
+        name: 'None',
+        filepath: require('../../assets/images/Furniture/Empty.png'),
+      },
+      {
+        id: '1',
+        name: 'Red Couch',
+        filepath: require('../../assets/images/Furniture/Couch_large_2_red.png'),
+      },
+      {
+        id: '2',
+        name: 'Blue Couch',
+        filepath: require('../../assets/images/Furniture/Couch_large_blue.png'),
+      },
+      {
+        id: '3',
+        name: 'Table',
+        filepath: require('../../assets/images/Furniture/Table_medium.png'),
+      },
+      {
+        id: '4',
+        name: 'Countertop',
+        filepath: require('../../assets/images/Furniture/Countertop.png'),
+      },
+    ],
+  },
+  {
+    category: 'Backgrounds',
+    items: [
+      {
+        id: '5',
+        name: 'Morning',
+        filepath: require('../../assets/images/Backgrounds/Morning.png'),
+      },
+      {
+        id: '6',
+        name: 'Late Morning',
+        filepath: require('../../assets/images/Backgrounds/Late_morning.png'),
+      },
+      {
+        id: '7',
+        name: 'Afternoon',
+        filepath: require('../../assets/images/Backgrounds/Afternoon.png'),
+      },
+      {
+        id: '8',
+        name: 'Late Afternoon',
+        filepath: require('../../assets/images/Backgrounds/Late_afternoon.png'),
+      },
+      {
+        id: '9',
+        name: 'Evening',
+        filepath: require('../../assets/images/Backgrounds/Evening.png'),
+      },
+      {
+        id: '10',
+        name: 'Late Evening',
+        filepath: require('../../assets/images/Backgrounds/Late_evening.png'),
+      },
+      {
+        id: '11',
+        name: 'Night',
+        filepath: require('../../assets/images/Backgrounds/Night.png'),
+      },
+    ],
+  },
+];
 
-const catImages: CatImages = {
+const CAT_IMAGES = {
   '12': {
     laying: require('../../assets/images/Cat-1/Cat-1-Laying.png'),
     idle: require('../../assets/images/Cat-1/Cat-1-Idle.png'),
@@ -53,17 +117,17 @@ export default function Home() {
   const totalTodos = todos.size;
   const completedTodos = Array.from(todos.values()).filter((todo) => todo.completed).length;
 
-  const equippedCatId = equippedItems.get('Breed') || '12';
+  const equippedCatId = (equippedItems.get('Breed') || '12') as keyof typeof CAT_IMAGES;
   let imagePath;
   let cols;
   if (completedTodos === 0) {
-    imagePath = catImages[equippedCatId].laying;
+    imagePath = CAT_IMAGES[equippedCatId].laying;
     cols = 8;
   } else if (completedTodos < totalTodos) {
-    imagePath = catImages[equippedCatId].idle;
+    imagePath = CAT_IMAGES[equippedCatId].idle;
     cols = 10;
   } else {
-    imagePath = catImages[equippedCatId].walk;
+    imagePath = CAT_IMAGES[equippedCatId].walk;
     cols = 8;
   }
 
@@ -80,6 +144,8 @@ export default function Home() {
   const totalFrames = cols === 8 ? 8 : 10;
   const screenWidth = Dimensions.get('window').width;
 
+  // Backend-configurable furniture position
+  const backendFurniturePosition = { bottom: 70, right: 3 }; // Adjust these values as needed
   useEffect(() => {
     if (!isAnimating) {
       return;
@@ -147,6 +213,18 @@ export default function Home() {
     };
   }, [isAnimating, cols, direction, completedTodos, reverse]);
 
+  // Get the equipped background
+  const equippedBackgroundId = equippedItems.get('Backgrounds');
+  const equippedBackground = STORE.find(
+    (category) => category.category === 'Backgrounds'
+  )?.items.find((item) => item.id === equippedBackgroundId);
+
+  // Get the equipped furniture
+  const equippedFurnitureId = equippedItems.get('Furniture');
+  const equippedFurniture = STORE.find((category) => category.category === 'Furniture')?.items.find(
+    (item) => item.id === equippedFurnitureId
+  );
+
   return (
     <>
       <Stack.Screen
@@ -154,10 +232,31 @@ export default function Home() {
           title: 'Pet',
         }}
       />
-      <View className="flex-1">
-        <ImageBackground
-          source={require('../../assets/images/Backgrounds/Late_morning.png')}
-          className="flex-1 items-center justify-center">
+      <ImageBackground
+        source={equippedBackground ? equippedBackground.filepath : null}
+        style={styles.background}
+        resizeMode="cover">
+        <View style={styles.container}>
+          {equippedFurniture && (
+            <Canvas
+              style={[
+                styles.furniture,
+                {
+                  bottom: backendFurniturePosition.bottom,
+                  right: backendFurniturePosition.right,
+                },
+              ]}>
+              <SkiaImage
+                image={useImage(equippedFurniture.filepath)}
+                x={0}
+                y={0}
+                width={100}
+                height={100}
+              />
+            </Canvas>
+          )}
+
+          {/* Render the cat */}
           <View className="mt-[30rem] self-center">
             <Canvas
               style={{
@@ -171,7 +270,7 @@ export default function Home() {
               }}>
               {skiaImage &&
                 (cols === 1 ? (
-                  <Image
+                  <SkiaImage
                     image={skiaImage}
                     x={0}
                     y={0}
@@ -179,7 +278,7 @@ export default function Home() {
                     height={frameHeight * 5}
                   />
                 ) : (
-                  <Image
+                  <SkiaImage
                     image={skiaImage}
                     x={-frame * frameWidth * 5}
                     y={0}
@@ -189,8 +288,24 @@ export default function Home() {
                 ))}
             </Canvas>
           </View>
-        </ImageBackground>
-      </View>
+        </View>
+      </ImageBackground>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  furniture: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+  },
+});
