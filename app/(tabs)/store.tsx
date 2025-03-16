@@ -1,6 +1,6 @@
 import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 import { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { Button } from '~/components/Button';
@@ -71,7 +71,7 @@ const STORE = [
         cost: 700,
       },
       {
-        id: '8',
+        id: '9',
         name: 'Evening',
         filepath: require('../../assets/images/Backgrounds/Evening.png'),
         cost: 700,
@@ -133,6 +133,12 @@ export default function ExpandableList() {
   const { equippedItems, changeEquipped } = useEquippedStore();
   const { coins, setCoins } = useCoinsStore();
 
+  // Get the equipped background
+  const equippedBackgroundId = equippedItems.get('Backgrounds');
+  const equippedBackground = STORE.find((category) => category.category === 'Backgrounds')?.items.find(
+    (item) => item.id === equippedBackgroundId
+  );
+
   // Load images at the top level
   const images: { [key: string]: ReturnType<typeof useImage> } = {};
   STORE.forEach(({ items }) => {
@@ -158,93 +164,98 @@ export default function ExpandableList() {
   };
 
   return (
-    <ScrollView className="flex-1 p-4">
-      <View className="flex-row items-center">
-        <Canvas style={{ width: 35, height: 35 }}>
-          <SkiaImage
-            image={useImage(require('../../assets/images/coin.png'))}
-            x={0}
-            y={0}
-            width={35}
-            height={35}
-          />
-        </Canvas>
-        <Text className="text-4xl font-bold">{coins}</Text>
-      </View>
-      <Button title="add 100 coins" onPress={() => setCoins((prev) => prev + 100)}>
-        more coins
-      </Button>
-      {STORE.map(({ category, items }, index) => {
-        const isCategoryOpen = openedCategories.has(category);
-        return (
-          <View key={index}>
-            <TouchableOpacity
-              onPress={() => {
-                if (isCategoryOpen) {
-                  setOpenedCategories((s) => {
-                    const newSet = new Set(s);
-                    newSet.delete(category);
-                    return newSet;
-                  });
-                } else {
-                  setOpenedCategories((s) => {
-                    const newSet = new Set(s);
-                    newSet.add(category);
-                    return newSet;
-                  });
-                }
-              }}>
-              <View className="flex-row items-center justify-between py-2">
-                <Text className="text-lg font-bold">{category}</Text>
-                <Icon
-                  name={isCategoryOpen ? 'chevron-up' : 'chevron-down'}
-                  size={24}
-                  color="#000"
-                />
-              </View>
-            </TouchableOpacity>
-            {isCategoryOpen && (
-              <FlatList
-                data={items}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <View className="m-2 flex-1 rounded-lg bg-gray-100 p-4">
-                    <Text className="mb-2 text-base font-bold">{item.name}</Text>
-                    <Canvas style={styles.largeImage}>
-                      <SkiaImage
-                        image={images[item.id]}
-                        x={category === 'Breed' ? -40 : 0}
-                        y={category === 'Breed' ? -40 : 0}
-                        width={category === 'Breed' ? 200 : 120}
-                        height={category === 'Breed' ? 200 : 120}
-                      />
-                    </Canvas>
-                    {purchasedItems.has(item.id) ? (
-                      equippedItems.get(category) === item.id ? (
-                        <Text className="text-sm text-green-600">Equipped</Text>
+    <ImageBackground
+      source={equippedBackground ? equippedBackground.filepath : null}
+      style={{ flex: 1 }}
+      resizeMode="cover">
+      <ScrollView className="flex-1 p-4">
+        <View className="flex-row items-center">
+          <Canvas style={{ width: 35, height: 35 }}>
+            <SkiaImage
+              image={useImage(require('../../assets/images/coin.png'))}
+              x={0}
+              y={0}
+              width={35}
+              height={35}
+            />
+          </Canvas>
+          <Text className="text-4xl font-bold">{coins}</Text>
+        </View>
+        <Button title="add 100 coins" onPress={() => setCoins((prev) => prev + 100)}>
+          more coins
+        </Button>
+        {STORE.map(({ category, items }, index) => {
+          const isCategoryOpen = openedCategories.has(category);
+          return (
+            <View key={index}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (isCategoryOpen) {
+                    setOpenedCategories((s) => {
+                      const newSet = new Set(s);
+                      newSet.delete(category);
+                      return newSet;
+                    });
+                  } else {
+                    setOpenedCategories((s) => {
+                      const newSet = new Set(s);
+                      newSet.add(category);
+                      return newSet;
+                    });
+                  }
+                }}>
+                <View className="flex-row items-center justify-between py-2">
+                  <Text className="text-lg font-bold">{category}</Text>
+                  <Icon
+                    name={isCategoryOpen ? 'chevron-up' : 'chevron-down'}
+                    size={24}
+                    color="#000"
+                  />
+                </View>
+              </TouchableOpacity>
+              {isCategoryOpen && (
+                <FlatList
+                  data={items}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <View className="m-2 flex-1 rounded-lg bg-gray-100 p-4">
+                      <Text className="mb-2 text-base font-bold">{item.name}</Text>
+                      <Canvas style={styles.largeImage}>
+                        <SkiaImage
+                          image={images[item.id]}
+                          x={category === 'Breed' ? -40 : 0}
+                          y={category === 'Breed' ? -40 : 0}
+                          width={category === 'Breed' ? 200 : 120}
+                          height={category === 'Breed' ? 200 : 120}
+                        />
+                      </Canvas>
+                      {purchasedItems.has(item.id) ? (
+                        equippedItems.get(category) === item.id ? (
+                          <Text className="text-sm text-green-600">Equipped</Text>
+                        ) : (
+                          <TouchableOpacity onPress={() => handleEquipItem(item.id, category)}>
+                            <Text className="font-bold text-orange-600">Equip</Text>
+                          </TouchableOpacity>
+                        )
                       ) : (
-                        <TouchableOpacity onPress={() => handleEquipItem(item.id, category)}>
-                          <Text className="font-bold text-orange-600">Equip</Text>
+                        <Text className="text-sm text-gray-600">${item.cost}</Text>
+                      )}
+                      {!purchasedItems.has(item.id) && (
+                        <TouchableOpacity onPress={() => handleBuyItem(item.id, item.cost)}>
+                          <Text className="font-bold text-blue-600">Buy</Text>
                         </TouchableOpacity>
-                      )
-                    ) : (
-                      <Text className="text-sm text-gray-600">${item.cost}</Text>
-                    )}
-                    {!purchasedItems.has(item.id) && (
-                      <TouchableOpacity onPress={() => handleBuyItem(item.id, item.cost)}>
-                        <Text className="font-bold text-blue-600">Buy</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                )}
-                numColumns={2}
-                scrollEnabled={false} // Disable scrolling for FlatList
-              />
-            )}
-          </View>
-        );
-      })}
-    </ScrollView>
+                      )}
+                    </View>
+                  )}
+                  numColumns={2}
+                  scrollEnabled={false} // Disable scrolling for FlatList
+                />
+              )}
+            </View>
+          );
+        })}
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
