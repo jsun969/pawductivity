@@ -3,23 +3,67 @@ import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, ImageBackground, Dimensions } from 'react-native';
 
+import { useEquippedStore } from '~/store/equipped';
 import { useTodoStore } from '~/store/todo';
+
+type CatImages = {
+  [key: string]: {
+    laying: any;
+    idle: any;
+    walk: any;
+  };
+};
+
+const catImages: CatImages = {
+  '12': {
+    laying: require('../../assets/images/Cat-1/Cat-1-Laying.png'),
+    idle: require('../../assets/images/Cat-1/Cat-1-Idle.png'),
+    walk: require('../../assets/images/Cat-1/Cat-1-Walk.png'),
+  },
+  '13': {
+    laying: require('../../assets/images/Cat-2/Cat-2-Laying.png'),
+    idle: require('../../assets/images/Cat-2/Cat-2-Idle.png'),
+    walk: require('../../assets/images/Cat-2/Cat-2-Walk.png'),
+  },
+  '14': {
+    laying: require('../../assets/images/Cat-3/Cat-3-Laying.png'),
+    idle: require('../../assets/images/Cat-3/Cat-3-Idle.png'),
+    walk: require('../../assets/images/Cat-3/Cat-3-Walk.png'),
+  },
+  '15': {
+    laying: require('../../assets/images/Cat-4/Cat-4-Laying.png'),
+    idle: require('../../assets/images/Cat-4/Cat-4-Idle.png'),
+    walk: require('../../assets/images/Cat-4/Cat-4-Walk.png'),
+  },
+  '16': {
+    laying: require('../../assets/images/Cat-5/Cat-5-Laying.png'),
+    idle: require('../../assets/images/Cat-5/Cat-5-Idle.png'),
+    walk: require('../../assets/images/Cat-5/Cat-5-Walk.png'),
+  },
+  '17': {
+    laying: require('../../assets/images/Cat-6/Cat-6-Laying.png'),
+    idle: require('../../assets/images/Cat-6/Cat-6-Idle.png'),
+    walk: require('../../assets/images/Cat-6/Cat-6-Walk.png'),
+  },
+};
 
 export default function Home() {
   const { todos } = useTodoStore();
+  const { equippedItems } = useEquippedStore();
   const totalTodos = todos.size;
   const completedTodos = Array.from(todos.values()).filter((todo) => todo.completed).length;
 
+  const equippedCatId = equippedItems.get('Breed') || '12';
   let imagePath;
   let cols;
   if (completedTodos === 0) {
-    imagePath = require('../../assets/images/Cat-1/Cat-1-Laying.png');
+    imagePath = catImages[equippedCatId].laying;
     cols = 8;
   } else if (completedTodos < totalTodos) {
-    imagePath = require('../../assets/images/Cat-1/Cat-1-Idle.png');
+    imagePath = catImages[equippedCatId].idle;
     cols = 10;
   } else {
-    imagePath = require('../../assets/images/Cat-1/Cat-1-Walk.png');
+    imagePath = catImages[equippedCatId].walk;
     cols = 8;
   }
 
