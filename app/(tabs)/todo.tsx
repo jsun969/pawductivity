@@ -14,7 +14,7 @@ const DIFFICULTY_COLORS: Record<TodoDifficulty, string> = {
 };
 
 export default function TodoPage() {
-  const { todos, toggleTodoComplete } = useTodoStore();
+  const { todos, toggleTodoComplete, removeTodo } = useTodoStore();
 
   // Convert Map to array for FlatList and sort
   const todoItems = Array.from(todos).map(([id, todo]) => ({ id, todo }));
@@ -105,6 +105,11 @@ export default function TodoPage() {
                 item.todo.completed ? 'border-blue-500 bg-blue-500' : 'border-gray-400'
               } h-6 w-6 items-center justify-center rounded border-2`}>
               {item.todo.completed && <Text className="text-white">✓</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => removeTodo(item.id)}
+              className="ml-2 h-6 w-6 items-center justify-center rounded border-2 border-red-500 bg-red-500">
+              <Text className="text-white">✕</Text>
             </TouchableOpacity>
           </View>
         )}
