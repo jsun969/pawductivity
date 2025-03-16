@@ -1,7 +1,7 @@
+import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 
 const STORE = [
   {
