@@ -5,42 +5,23 @@ import { persist } from 'zustand/middleware';
 import { storage } from '~/lib/zustand-storage';
 
 export interface equippedState {
-  breed: string;
-  background: string;
-  furniture: string;
   purchasedItems: Set<string>;
-  equippedItems: Set<string>;
+  equippedItems: Map<string, string>;
   // The actions
-  setEquippedBreed: (newID: string) => void;
-  setEquippedBackground: (newID: string) => void;
-  setEquippedFurniture: (newID: string) => void;
   addPurchased: (newID: string) => void;
-  changeEquipped: (oldID: string, newID: string) => void;
+  changeEquipped: (category: string, newID: string) => void;
 }
 
 export const useEquippedStore = create<equippedState>()(
   persist(
     (set) => ({
-      breed: '12',
-      background: '6',
-      furniture: '1', // need to make a default furniture which is nothing
-      purchasedItems: new Set(),
-      equippedItems: new Set(),
-      setEquippedBreed: (newID) => {
-        set((state) => {
-          return { breed: newID };
-        });
-      },
-      setEquippedBackground: (newID) => {
-        set((state) => {
-          return { background: newID };
-        });
-      },
-      setEquippedFurniture: (newID) => {
-        set((state) => {
-          return { furniture: newID };
-        });
-      },
+      purchasedItems: new Set(['0', '6', '12']),
+      equippedItems: new Map([
+        ['Breed', '12'],
+        ['Backgrounds', '6'],
+        ['Furniture', '0'],
+      ]),
+
       addPurchased: (newID) => {
         set((state) => {
           const newPurchased = new Set(state.purchasedItems);
@@ -48,11 +29,10 @@ export const useEquippedStore = create<equippedState>()(
           return { purchasedItems: newPurchased };
         });
       },
-      changeEquipped: (oldID, newID) => {
+      changeEquipped: (category, newID) => {
         set((state) => {
-          const newEquipped = new Set(state.equippedItems);
-          newEquipped.delete(oldID);
-          newEquipped.add(newID);
+          const newEquipped = new Map(state.equippedItems);
+          newEquipped.set(category, newID);
           return { equippedItems: newEquipped };
         });
       },
