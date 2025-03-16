@@ -145,7 +145,7 @@ export default function Home() {
   const screenWidth = Dimensions.get('window').width;
 
   // Backend-configurable furniture position
-  const backendFurniturePosition = { bottom: 90, right: 3 }; // Adjust these values as needed
+  const backendFurniturePosition = { bottom: 70, right: 3 }; // Adjust these values as needed
   useEffect(() => {
     if (!isAnimating) {
       return;
