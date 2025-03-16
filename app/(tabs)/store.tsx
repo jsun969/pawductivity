@@ -3,10 +3,20 @@ import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import { Button } from '~/components/Button';
+import { useCoinsStore } from '~/store/coin';
+import { useEquippedStore } from '~/store/equipped';
+
 const STORE = [
   {
     category: 'Furniture',
     items: [
+      {
+        id: '0',
+        name: 'None',
+        filepath: require('../../assets/images/Furniture/Empty.png'),
+        cost: 0,
+      },
       {
         id: '1',
         name: 'Red Couch',
@@ -46,7 +56,7 @@ const STORE = [
         id: '6',
         name: 'Late Morning',
         filepath: require('../../assets/images/Backgrounds/Late_morning.png'),
-        cost: 500,
+        cost: 0,
       },
       {
         id: '7',
@@ -87,7 +97,7 @@ const STORE = [
         id: '12',
         name: 'Orange Cat',
         filepath: require('../../assets/images/Cat-1/Cat-1-Sitting.png'),
-        cost: 1000,
+        cost: 0,
       },
       {
         id: '13',
@@ -115,16 +125,13 @@ const STORE = [
       },
     ],
   },
-];
+] as const;
 
 export default function ExpandableList() {
   const [openedCategories, setOpenedCategories] = useState(new Set());
-  const [boughtItems, setBoughtItems] = useState(new Set());
-  const [equippedItems, setEquippedItems] = useState(new Set());
-  const [equippedFurniture, setEquippedFurniture] = useState('');
-  const [equippedBackground, setEquippedBackground] = useState('');
-  const [equippedBreed, setEquippedBreed] = useState('');
-  const [coins, setCoins] = useState(0);
+  const { purchasedItems, addPurchased } = useEquippedStore();
+  const { equippedItems, changeEquipped } = useEquippedStore();
+  const { coins, setCoins } = useCoinsStore();
 
   // Load images at the top level
   const images: { [key: string]: ReturnType<typeof useImage> } = {};
@@ -137,49 +144,36 @@ export default function ExpandableList() {
 
   // Handle item purchase
   const handleBuyItem = (id: string, cost: number) => {
-    setBoughtItems((s) => {
-      const newSet = new Set(s);
-      newSet.add(id);
-      return newSet;
-    });
-    // do this when there is storage, but for now just allow them to buy anything
-    /*
     if (coins >= cost) {
-      setCoins(coins - cost);
-      setBoughtItems((s) => {
-        const newSet = new Set(s);
-        newSet.add(id);
-        return newSet;
-      });
+      setCoins((prev) => prev - cost);
+      addPurchased(id);
     } else {
       // tell them not enough coins
     }
-      */
   };
 
   // Handle item equip
-  const handleEquipItem = (id: string, type: string) => {
-    setEquippedItems((s) => {
-      const newSet = new Set(s);
-      if (type === 'Furniture') {
-        newSet.delete(equippedFurniture);
-        setEquippedFurniture(id);
-      }
-      if (type === 'Backgrounds') {
-        newSet.delete(equippedBackground);
-        setEquippedBackground(id);
-      }
-      if (type === 'Breed') {
-        newSet.delete(equippedBreed);
-        setEquippedBreed(id);
-      }
-      newSet.add(id);
-      return newSet;
-    });
+  const handleEquipItem = (id: string, category: string) => {
+    changeEquipped(category, id);
   };
 
   return (
     <ScrollView className="flex-1 p-4">
+      <View className="flex-row items-center">
+        <Canvas style={{ width: 35, height: 35 }}>
+          <SkiaImage
+            image={useImage(require('../../assets/images/coin.png'))}
+            x={0}
+            y={0}
+            width={35}
+            height={35}
+          />
+        </Canvas>
+        <Text className="text-4xl font-bold">{coins}</Text>
+      </View>
+      <Button title="add 100 coins" onPress={() => setCoins((prev) => prev + 100)}>
+        more coins
+      </Button>
       {STORE.map(({ category, items }, index) => {
         const isCategoryOpen = openedCategories.has(category);
         return (
@@ -225,8 +219,8 @@ export default function ExpandableList() {
                         height={category === 'Breed' ? 200 : 120}
                       />
                     </Canvas>
-                    {boughtItems.has(item.id) ? (
-                      equippedItems.has(item.id) ? (
+                    {purchasedItems.has(item.id) ? (
+                      equippedItems.get(category) === item.id ? (
                         <Text className="text-sm text-green-600">Equipped</Text>
                       ) : (
                         <TouchableOpacity onPress={() => handleEquipItem(item.id, category)}>
@@ -236,7 +230,7 @@ export default function ExpandableList() {
                     ) : (
                       <Text className="text-sm text-gray-600">${item.cost}</Text>
                     )}
-                    {!boughtItems.has(item.id) && (
+                    {!purchasedItems.has(item.id) && (
                       <TouchableOpacity onPress={() => handleBuyItem(item.id, item.cost)}>
                         <Text className="font-bold text-blue-600">Buy</Text>
                       </TouchableOpacity>
