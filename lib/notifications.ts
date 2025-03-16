@@ -45,13 +45,13 @@ export async function registerForPushNotificationsAsync() {
 export async function schedulePushNotification() {
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: "Lock in gang, we gotta study lil bro 🔔",
+      title: 'Lock in gang, we gotta study lil bro 🔔',
       body: 'Get ready to study!',
       data: { data: 'goes here' },
       sound: 'default', // Ensure the notification plays a sound
       priority: Notifications.AndroidNotificationPriority.MAX, // High priority for Android
       interruptionLevel: 'timeSensitive', // High priority for iOS
     },
-    trigger: { seconds: 2 }, // Trigger after 2 seconds
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour: 2, minute: 0 }, // Trigger after 2 seconds
   });
 }

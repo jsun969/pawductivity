@@ -31,24 +31,18 @@ export default function RootLayout() {
     setupNotifications();
 
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-      if (
-        appState.current.match(/active/) &&
-        nextAppState.match(/inactive|background/)
-      ) {
+      if (appState.current.match(/active/) && nextAppState.match(/inactive|background/)) {
         // App is going to the background, schedule a notification
         notificationId.current = await Notifications.scheduleNotificationAsync({
           content: {
-            title: "Time to lock in! 🔔",
+            title: 'Time to lock in! 🔔',
             body: "It's been 3 hours since you last used the app. Time to study!",
             data: { reason: 'inactivity' },
           },
-          trigger: { seconds: 10800 }, // 3 hours
+          trigger: { type: Notifications.SchedulableTriggerInputTypes.DAILY, hour: 2, minute: 0 }, // Trigger after 2 seconds
         });
         console.log('Notification scheduled:', notificationId.current);
-      } else if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState.match(/active/)
-      ) {
+      } else if (appState.current.match(/inactive|background/) && nextAppState.match(/active/)) {
         // App is becoming active, cancel the scheduled notification
         if (notificationId.current) {
           await Notifications.cancelScheduledNotificationAsync(notificationId.current);
@@ -75,12 +69,12 @@ export default function RootLayout() {
         <Stack.Screen name="new-todo" options={{ presentation: 'modal', title: 'New Todo' }} />
       </Stack>
       {/* Add a button to test notifications */}
-      <Button
+      {/* <Button
         title="Test Notification"
         onPress={async () => {
           await schedulePushNotification();
         }}
-      />
+      /> */}
     </View>
   );
 }

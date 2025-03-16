@@ -125,7 +125,7 @@ const STORE = [
       },
     ],
   },
-] as const;
+];
 
 export default function ExpandableList() {
   const [openedCategories, setOpenedCategories] = useState(new Set());

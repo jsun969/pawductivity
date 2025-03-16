@@ -117,7 +117,7 @@ export default function Home() {
   const totalTodos = todos.size;
   const completedTodos = Array.from(todos.values()).filter((todo) => todo.completed).length;
 
-  const equippedCatId = equippedItems.get('Breed') || '12';
+  const equippedCatId = (equippedItems.get('Breed') || '12') as keyof typeof CAT_IMAGES;
   let imagePath;
   let cols;
   if (completedTodos === 0) {
@@ -215,9 +215,9 @@ export default function Home() {
 
   // Get the equipped background
   const equippedBackgroundId = equippedItems.get('Backgrounds');
-  const equippedBackground = STORE.find((category) => category.category === 'Backgrounds')?.items.find(
-    (item) => item.id === equippedBackgroundId
-  );
+  const equippedBackground = STORE.find(
+    (category) => category.category === 'Backgrounds'
+  )?.items.find((item) => item.id === equippedBackgroundId);
 
   // Get the equipped furniture
   const equippedFurnitureId = equippedItems.get('Furniture');
@@ -235,19 +235,17 @@ export default function Home() {
       <ImageBackground
         source={equippedBackground ? equippedBackground.filepath : null}
         style={styles.background}
-        resizeMode="cover"
-      >
+        resizeMode="cover">
         <View style={styles.container}>
           {equippedFurniture && (
             <Canvas
               style={[
                 styles.furniture,
                 {
-                  bottom: backendFurniturePosition.bottom, 
-                  right: backendFurniturePosition.right,  
+                  bottom: backendFurniturePosition.bottom,
+                  right: backendFurniturePosition.right,
                 },
-              ]}
-            >
+              ]}>
               <SkiaImage
                 image={useImage(equippedFurniture.filepath)}
                 x={0}
@@ -269,8 +267,7 @@ export default function Home() {
                   { translateY: position.y },
                   { scaleX: flip ? -1 : 1 },
                 ],
-              }}
-            >
+              }}>
               {skiaImage &&
                 (cols === 1 ? (
                   <SkiaImage
