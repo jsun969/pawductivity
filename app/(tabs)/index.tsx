@@ -1,4 +1,4 @@
-import { Canvas, Image, useImage } from '@shopify/react-native-skia';
+import { Canvas, Image as SkiaImage, useImage } from '@shopify/react-native-skia';
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, ImageBackground, Dimensions, StyleSheet, Image as RNImage } from 'react-native';
@@ -78,15 +78,7 @@ const STORE = [
   },
 ];
 
-type CatImages = {
-  [key: string]: {
-    laying: any;
-    idle: any;
-    walk: any;
-  };
-};
-
-const catImages: CatImages = {
+const CAT_IMAGES = {
   '12': {
     laying: require('../../assets/images/Cat-1/Cat-1-Laying.png'),
     idle: require('../../assets/images/Cat-1/Cat-1-Idle.png'),
@@ -129,13 +121,13 @@ export default function Home() {
   let imagePath;
   let cols;
   if (completedTodos === 0) {
-    imagePath = catImages[equippedCatId].laying;
+    imagePath = CAT_IMAGES[equippedCatId].laying;
     cols = 8;
   } else if (completedTodos < totalTodos) {
-    imagePath = catImages[equippedCatId].idle;
+    imagePath = CAT_IMAGES[equippedCatId].idle;
     cols = 10;
   } else {
-    imagePath = catImages[equippedCatId].walk;
+    imagePath = CAT_IMAGES[equippedCatId].walk;
     cols = 8;
   }
 
@@ -153,8 +145,7 @@ export default function Home() {
   const screenWidth = Dimensions.get('window').width;
 
   // Backend-configurable furniture position
-  const backendFurniturePosition = { bottom: 100, right: 1 }; // Example values from backend
-
+  const backendFurniturePosition = { bottom: 90, right: 3 }; // Adjust these values as needed
   useEffect(() => {
     if (!isAnimating) {
       return;
@@ -247,19 +238,24 @@ export default function Home() {
         resizeMode="cover"
       >
         <View style={styles.container}>
-          {/* Render equipped furniture */}
           {equippedFurniture && (
-            <RNImage
-              source={equippedFurniture.filepath}
+            <Canvas
               style={[
                 styles.furniture,
                 {
-                  bottom: backendFurniturePosition.bottom,
-                  right: backendFurniturePosition.right,
+                  bottom: backendFurniturePosition.bottom, 
+                  right: backendFurniturePosition.right,  
                 },
               ]}
-              resizeMode="contain"
-            />
+            >
+              <SkiaImage
+                image={useImage(equippedFurniture.filepath)}
+                x={0}
+                y={0}
+                width={100}
+                height={100}
+              />
+            </Canvas>
           )}
 
           {/* Render the cat */}
@@ -277,7 +273,7 @@ export default function Home() {
             >
               {skiaImage &&
                 (cols === 1 ? (
-                  <Image
+                  <SkiaImage
                     image={skiaImage}
                     x={0}
                     y={0}
@@ -285,7 +281,7 @@ export default function Home() {
                     height={frameHeight * 5}
                   />
                 ) : (
-                  <Image
+                  <SkiaImage
                     image={skiaImage}
                     x={-frame * frameWidth * 5}
                     y={0}
